@@ -1,6 +1,7 @@
 package email
 
 import (
+	"fmt"
 	"github.com/beop13/notification-service/logger"
 	"github.com/beop13/notification-service/notificators/model"
 	"net/smtp"
@@ -21,11 +22,9 @@ func (e Email) SendNotification(message model.Message) error {
 	//body := fmt.Sprintf("<html><body><h1>%s</h1></body></html>", message.Body)
 	toHeader := strings.Join(message.To, ",")
 
-	header := "From: " + e.Login + "\n" +
-		"To: " + toHeader + "\n" +
-		"Subject: " + message.Subject + "\n\n"
+	header := fmt.Sprintf("From: %s\nTo: %s\nSubject: %s\n\n", e.Login, toHeader, message.Subject)
 	//mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	msg := []byte(header + message.Body)
+	msg := []byte(fmt.Sprintf("%s%s", header, message.Body))
 
 	err := smtp.SendMail(e.Host+":"+e.Port,
 		smtp.PlainAuth("", from, pass, e.Host),

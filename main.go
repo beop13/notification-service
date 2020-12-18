@@ -14,10 +14,9 @@ import (
 	"time"
 )
 
-
 /* TODO
 tls
- */
+*/
 func main() {
 	logger.L.Print("Welcome to notification-service")
 
@@ -26,7 +25,7 @@ func main() {
 
 	srv := &http.Server{
 		Handler: r,
-		Addr:    configs.Cfg.ServiceSettings.Host + ":" + configs.Cfg.ServiceSettings.Port,
+		Addr:    fmt.Sprintf("%s:%s", configs.Cfg.ServiceSettings.Host, configs.Cfg.ServiceSettings.Port),
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
