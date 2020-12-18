@@ -8,7 +8,7 @@ import (
 	"github.com/beop13/notification-service/logger"
 	"github.com/beop13/notification-service/notificators"
 	"github.com/beop13/notification-service/notificators/model"
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"strings"
 	"time"
@@ -16,14 +16,14 @@ import (
 
 
 /* TODO
-3) http server http://github.com/julienschmidt/httprouter
-
+tls
  */
 func main() {
 	logger.L.Print("Welcome to notification-service")
 
-	r := mux.NewRouter()
-	r.HandleFunc("/notification", NotificationHandler).Methods("POST")
+	r := httprouter.New()
+	r.POST("/notification", NotificationHandler)
+
 	srv := &http.Server{
 		Handler: r,
 		Addr:    configs.Cfg.ServiceSettings.Host + ":" + configs.Cfg.ServiceSettings.Port,
@@ -37,7 +37,7 @@ func main() {
 
 }
 
-func NotificationHandler(w http.ResponseWriter, r *http.Request) {
+func NotificationHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	logger.L.Printf("Notification handler: %v", r)
 
 	sendVia := r.URL.Query().Get("send_via")
